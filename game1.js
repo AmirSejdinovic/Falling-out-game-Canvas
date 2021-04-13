@@ -45,8 +45,10 @@ function enemyMaker(){
   let xPos = Math.random()*(canvas.width-tile);
   enemies.arr.push({
     x:xPos,
-    y:10,
-    size:10
+    y:Math.random()*-1000,
+    size:Math.random()*20 + 10,
+    speed:Math.random()*2 +5,
+    color: 'red'
 
   })
 }
@@ -61,7 +63,14 @@ function draw(){
 
   }
   enemies.arr.forEach((enemy,index)=>{
-    ctx.fillRect(enemy.x,enemy.y,enemy.size,enemy.size);
+    enemy.y += enemy.speed;
+    if(enemy.y > canvas.height){
+      enemies.arr.splice(index,1);
+    }
+    ctx.beginPath();
+    ctx.arc(enemy.x,enemy.y,enemy.size,enemy.size,0,Math.PI*2);
+    ctx.fill();
+    //ctx.fillRect(enemy.x,enemy.y,enemy.size,enemy.size);
   })
     
  
