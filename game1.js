@@ -1,5 +1,11 @@
 const canvas = document.createElement('canvas');
 const tile = 25;
+const enemyTotal = 20;
+
+const enemies = {speed:5,arr:[],total:20};
+
+
+
 canvas.setAttribute('height',tile*20);
 canvas.setAttribute('width',tile*25);
 canvas.style.backgroundColor='black';
@@ -35,10 +41,31 @@ document.addEventListener('keyup',(e)=>{
 
   requestAnimationFrame(draw);
 
+function enemyMaker(){
+  let xPos = Math.random()*(canvas.width-tile);
+  enemies.arr.push({
+    x:xPos,
+    y:10,
+    size:10
+
+  })
+}
 
 
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  if(enemies.arr.length < enemies.total){
+    console.log(enemies);
+    enemyMaker();
+
+  }
+  enemies.arr.forEach((enemy,index)=>{
+    ctx.fillRect(enemy.x,enemy.y,enemy.size,enemy.size);
+  })
+    
+ 
+
   if(keyz.ArrowLeft && player.x>0){player.x-=player.speed};
   if(keyz.ArrowRight && player.x < canvas.width-player.width){player.x+=player.speed};
   if(keyz.ArrowUp && player.y > canvas.height-tile*8){player.y -= player.speed};
