@@ -1,8 +1,8 @@
 const canvas = document.createElement('canvas');
 const tile = 25;
-const enemyTotal = 20;
+const enemyTotal = 2;
 
-const enemies = {speed:5,arr:[],total:20};
+const enemies = {speed:1,arr:[],total:20};
 
 
 
@@ -41,14 +41,27 @@ document.addEventListener('keyup',(e)=>{
 
   requestAnimationFrame(draw);
 
+  function col(a,b){
+    let boo = a.x<b.x+b.width && a.x + a.width > b.x && a.y<b.y+b.height && a.y + a.height > b.y;
+    if(boo){
+      console.log('HIt')
+    }
+
+    
+    return boo;
+  }
+
 function enemyMaker(){
   let xPos = Math.random()*(canvas.width-tile);
   let badValue = Math.random() < 0.1;
-  let colorBack = badValue ? 'red' : '#'+Math.random().toString(16).substr(-6) 
+  let colorBack = badValue ? 'red' : '#'+Math.random().toString(16).substr(-6) ;
+  let wid = Math.random()*20 + 10; 
   enemies.arr.push({
     x:xPos,
     y:Math.random()*-1000,
-    size:Math.random()*20 + 10,
+    width:wid*2,
+    height:wid*2,
+    size:wid,
     speed:Math.random()*2 +5,
     color: colorBack,
     bad: badValue,
@@ -67,7 +80,17 @@ function draw(){
     enemyMaker();
 
   }
+
+  if(keyz.ArrowLeft && player.x>0){player.x-=player.speed};
+  if(keyz.ArrowRight && player.x < canvas.width-player.width){player.x+=player.speed};
+  if(keyz.ArrowUp && player.y > canvas.height-tile*8){player.y -= player.speed};
+  if(keyz.ArrowDown && player.y < canvas.height-tile){player.y += player.speed};
+  ctx.fillStyle = player.color;
+  ctx.fillRect(player.x, player.y,player.width,player.height);
+
+
   enemies.arr.forEach((enemy,index)=>{
+     col(player,enemy);
     enemy.y += enemy.speed;
     if(enemy.y > canvas.height){
       enemies.arr.splice(index,1);
@@ -85,7 +108,8 @@ function draw(){
       enemy.size -= 1;
     }
     ctx.strokeStyle = 'white';
-    ctx.arc(enemy.x,enemy.y,enemy.size,enemy.size,0,Math.PI*2);
+    ctx.arc(enemy.x+(enemy.width/2),enemy.y+(enemy.height/2),enemy.size,enemy.size,0,Math.PI*2);
+    //ctx.strokeRect(enemy.x,enemy.y,enemy.width,enemy.height);
     ctx.stroke();
     ctx.fill();
     //ctx.fillRect(enemy.x,enemy.y,enemy.size,enemy.size);
@@ -93,11 +117,6 @@ function draw(){
     
  
 
-  if(keyz.ArrowLeft && player.x>0){player.x-=player.speed};
-  if(keyz.ArrowRight && player.x < canvas.width-player.width){player.x+=player.speed};
-  if(keyz.ArrowUp && player.y > canvas.height-tile*8){player.y -= player.speed};
-  if(keyz.ArrowDown && player.y < canvas.height-tile){player.y += player.speed};
-  ctx.fillStyle = player.color;
-  ctx.fillRect(player.x, player.y,player.width,player.height);
+  
   requestAnimationFrame(draw);
 }
