@@ -33,7 +33,7 @@ const keyz = {
 }
 
 document.addEventListener('keydown',(e)=>{
-    console.log(e.code);
+    
     if(e.code in keyz){keyz[e.code]=true;}});
 
 document.addEventListener('keyup',(e)=>{
@@ -43,12 +43,17 @@ document.addEventListener('keyup',(e)=>{
 
 function enemyMaker(){
   let xPos = Math.random()*(canvas.width-tile);
+  let badValue = Math.random() < 0.1;
+  let colorBack = badValue ? 'red' : '#'+Math.random().toString(16).substr(-6) 
   enemies.arr.push({
     x:xPos,
     y:Math.random()*-1000,
     size:Math.random()*20 + 10,
     speed:Math.random()*2 +5,
-    color: 'red'
+    color: colorBack,
+    bad: badValue,
+    toggle: true,
+    growth: 0
 
   })
 }
@@ -58,7 +63,7 @@ function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
   if(enemies.arr.length < enemies.total){
-    console.log(enemies);
+    
     enemyMaker();
 
   }
@@ -68,7 +73,20 @@ function draw(){
       enemies.arr.splice(index,1);
     }
     ctx.beginPath();
+    ctx.fillStyle = enemy.color;
+    if(enemy.toggle && enemy.bad){
+      enemy.growth++;
+      enemy.size += 1;
+      if(enemy.growth > 10){enemy.toggle = false; enemy.growth}
+    }else if (enemy.bad){
+      ctx.fillStyle = '#00000';
+      enemy.growth++;
+      if(enemy.growth > 10){enemy.toggle=true;enemy.growth=0;}
+      enemy.size -= 1;
+    }
+    ctx.strokeStyle = 'white';
     ctx.arc(enemy.x,enemy.y,enemy.size,enemy.size,0,Math.PI*2);
+    ctx.stroke();
     ctx.fill();
     //ctx.fillRect(enemy.x,enemy.y,enemy.size,enemy.size);
   })
