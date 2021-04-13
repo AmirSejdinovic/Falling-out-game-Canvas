@@ -17,9 +17,33 @@ const player = {
 
 };
 
-draw();
+const keyz = {
+  ArrowLeft:false,
+  ArrowRight:false,
+  ArrowUp:false,
+  ArrowDown:false
+
+
+}
+
+document.addEventListener('keydown',(e)=>{
+    console.log(e.code);
+    if(e.code in keyz){keyz[e.code]=true;}});
+
+document.addEventListener('keyup',(e)=>{
+  if(e.code in keyz){keyz[e.code]=false;}})
+
+  requestAnimationFrame(draw);
+
+
 
 function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(keyz.ArrowLeft && player.x>0){player.x-=player.speed};
+  if(keyz.ArrowRight && player.x < canvas.width-player.width){player.x+=player.speed};
+  if(keyz.ArrowUp && player.y > canvas.height-tile*8){player.y -= player.speed};
+  if(keyz.ArrowDown && player.y < canvas.height-tile){player.y += player.speed};
   ctx.fillStyle = player.color;
   ctx.fillRect(player.x, player.y,player.width,player.height);
+  requestAnimationFrame(draw);
 }
