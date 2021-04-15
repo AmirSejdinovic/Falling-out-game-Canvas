@@ -19,7 +19,9 @@ const player = {
   speed:5,
   width:tile*4,
   height:tile*1,
-  color: 'red'
+  color: 'red',
+  score: 0,
+  lives: 10,
 
 };
 
@@ -117,9 +119,25 @@ function draw(){
     //ctx.fillRect(enemy.x,enemy.y,enemy.size,enemy.size);
 
     if(col(player,enemy)){
-      let removed = enemies.arr.splice(index,1);
-      console.log(removed);
+      let removed = enemies.arr.splice(index,1)[0];
+      if(removed.bad){
+         player.lives--;
+      }else{
+        player.score += Math.ceil(removed.size);
+        console.log(removed);
+      }
+      
+
     };
+     let output = `Live : ${player.lives} Score : ${player.score} `;
+
+    ctx.beginPath();
+    ctx.fillStyle = '#222';
+    ctx.fillRect(10,10,canvas.width-20,50);
+    ctx.font = '24px arial';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'white';
+    ctx.fillText(output,canvas.width/2,40);
 
   })
     
