@@ -41,7 +41,7 @@ document.addEventListener('keyup',(e)=>{
 
   requestAnimationFrame(draw);
 
-  function col(a,b){
+function col(a,b){
     let boo = a.x<b.x+b.width && a.x + a.width > b.x && a.y<b.y+b.height && a.y + a.height > b.y;
     if(boo){
       console.log('HIt')
@@ -90,7 +90,8 @@ function draw(){
 
 
   enemies.arr.forEach((enemy,index)=>{
-     col(player,enemy);
+     
+
     enemy.y += enemy.speed;
     if(enemy.y > canvas.height){
       enemies.arr.splice(index,1);
@@ -107,12 +108,19 @@ function draw(){
       if(enemy.growth > 10){enemy.toggle=true;enemy.growth=0;}
       enemy.size -= 1;
     }
+   
     ctx.strokeStyle = 'white';
     ctx.arc(enemy.x+(enemy.width/2),enemy.y+(enemy.height/2),enemy.size,enemy.size,0,Math.PI*2);
     //ctx.strokeRect(enemy.x,enemy.y,enemy.width,enemy.height);
     ctx.stroke();
     ctx.fill();
     //ctx.fillRect(enemy.x,enemy.y,enemy.size,enemy.size);
+
+    if(col(player,enemy)){
+      let removed = enemies.arr.splice(index,1);
+      console.log(removed);
+    };
+
   })
     
  
