@@ -100,7 +100,7 @@ function draw(){
     ctx.fillStyle = enemy.color;
     if(enemy.toggle && enemy.bad){
       enemy.growth++;
-      enemy.size += 1;
+      enemy.size += 0.2;
       if(enemy.growth > 10){enemy.toggle = false; enemy.growth}
     }else if (enemy.bad){
       ctx.fillStyle = '#00000';
