@@ -6,8 +6,9 @@ const enemies = {speed:1,arr:[],total:20};
 
 
 
+
 const game = {
-  play: true,
+  play: false,
   req: ''
 };
 
@@ -15,6 +16,41 @@ canvas.setAttribute('height',tile*20);
 canvas.setAttribute('width',tile*25);
 canvas.style.backgroundColor='black';
 const ctx = canvas.getContext('2d');
+
+const btnPos = {
+  x:10,
+  y:canvas.height/2,
+  width: canvas.width -20,
+  height: 100
+};
+
+const btn = document.createElement('button');
+btn.textContent = "Start game";
+document.body.prepend(btn);
+btn.addEventListener('click', ()=>{
+  btn.style.display = 'none';
+  gameStart();
+});
+
+canvas.addEventListener('click',(e)=>{
+ if(!game.play){
+
+ 
+  const rect = canvas.getBoundingClientRect();
+  console.log(rect);
+  const mouseObj = {
+      x:e.clientX - rect.left,
+      y:e.clientY - rect.top,
+      width:5,
+      height:5
+    }
+    if(col(btnPos,mouseObj)){
+     gameStart();
+    };
+  console.log(mouseObj);
+ }
+})
+
 document.body.prepend(canvas);
 
 
@@ -46,8 +82,8 @@ document.addEventListener('keydown',(e)=>{
 document.addEventListener('keyup',(e)=>{
   if(e.code in keyz){keyz[e.code]=false;}})
 
-  gameStart(); 
-  //startScreen()
+  //gameStart(); 
+  startScreen()
 
 function col(a,b){
     let boo = a.x<b.x+b.width && a.x + a.width > b.x && a.y<b.y+b.height && a.y + a.height > b.y;
@@ -82,6 +118,7 @@ function enemyMaker(){
 function gameOver(){
    cancelAnimationFrame(game.req);
    game.play = false;
+   btn.style.display = 'block';
    //ctx.clearRect(0,0,canvas.width,canvas.height);
    ctx.fillStyle = 'black';
    ctx.fillRect(0,0, canvas.width, canvas.height);
@@ -102,16 +139,22 @@ function startScreen(){
 
     ctx.beginPath();
     ctx.fillStyle = 'red';
-    ctx.fillRect(10,10,canvas.width-20,50);
+    ctx.fillRect(btnPos.x,btnPos.y,btnPos.width,btnPos.height);
     ctx.font = '24px arial';
     ctx.textAlign = 'center';
     ctx.fillStyle = 'white';
-    ctx.fillText(output,canvas.width/2,canvas.height/2);
+    ctx.fillText(output,canvas.width/2,btnPos.y+40);
 }
 
 function gameStart(){
   game.req = requestAnimationFrame(draw);
   game.play = true;
+  enemies.arr = [];
+  player.score = 0;
+  player.lives = 3;
+  player.x = canvas.width/2;
+  player.y = canvas.height - (tile *3);
+
 }
 
 function draw(){
